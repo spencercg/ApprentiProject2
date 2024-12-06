@@ -53,3 +53,7 @@ resource "azurerm_network_interface" "sgrimesProjectNIC" {
 resource "" "name" {
   
 }
+
+resource "" "name" {
+  
+}
