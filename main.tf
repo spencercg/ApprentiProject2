@@ -7,11 +7,11 @@
     }
   }
 }
-*/
 
 provider "azurerm" {
   features {}
 }
+*/
 
 resource "azurerm_virtual_network" "sgrimesProjectVNet" {
   name                = "${var.prefix}-VNet"
