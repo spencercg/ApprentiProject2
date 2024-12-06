@@ -49,3 +49,4 @@ resource "azurerm_network_interface" "sgrimesProjectNIC" {
     private_ip_address_allocation = "Dynamic"
   }
 }
+
