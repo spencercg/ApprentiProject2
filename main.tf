@@ -44,17 +44,18 @@ resource "azurerm_subnet" "storageSubnetSubnet" {
 
 
 
-/*
+
 resource "azurerm_network_interface" "sgrimesProjectNIC" {
   name                = "${var.prefix}-nic"
   location            = var.resource_group_location
   resource_group_name = var.resource_group_name
 
+
   ip_configuration {
     name                          = "testconfiguration1"
-    subnet_id                     = "webSubnet"
+    subnet_id                     = azurerm_subnet.webSubnet.id
     private_ip_address_allocation = "Dynamic"
   }
 }
-*/
+
 
