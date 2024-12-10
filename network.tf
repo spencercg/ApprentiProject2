@@ -120,6 +120,7 @@ resource "azurerm_public_ip" "pip" {
   resource_group_name = var.resource_group_name
   allocation_method   = "Static"
   domain_name_label   = "spencercg92702"
+  sku                 = "Standard"
 
 
   tags = {
@@ -128,82 +129,8 @@ resource "azurerm_public_ip" "pip" {
 }
 
 
-resource "azurerm_lb" "loadbalanacer" {
-  name                = "${var.prefix}-lb"
-  location            = var.resource_group_location
-  resource_group_name = var.resource_group_name
 
 
-  frontend_ip_configuration {
-    name                 = "PublicIPAddress"
-    public_ip_address_id = azurerm_public_ip.pip.id
-    # subnet_id            = azurerm_subnet.webSubnet.id
-  }
-}
-
-resource "azurerm_lb_backend_address_pool" "backendpool" {
-  loadbalancer_id = azurerm_lb.loadbalanacer.id
-  name            = "BackEndAddressPool"
-}
-
-
-resource "azurerm_lb_nat_rule" "example" {
-  resource_group_name            = var.resource_group_name
-  loadbalancer_id                = azurerm_lb.loadbalanacer.id
-  name                           = "SSHAccess"
-  protocol                       = "Tcp"
-  backend_port                   = 22
-  frontend_port                  = 22
-  frontend_ip_configuration_name = "PublicIPAddress"
-  
-}
-
-/*
-resource "azurerm_lb_nat_pool" "lbnatpool" {
-  resource_group_name            = var.resource_group_name
-  name                           = "ssh"
-  loadbalancer_id                = azurerm_lb.loadblanacer.id
-  protocol                       = "Tcp"
-  frontend_port_start            = 50000
-  frontend_port_end              = 50119
-  backend_port                   = 22
-  frontend_ip_configuration_name = "PublicIPAddress"
-}
-*/
-
-
-resource "azurerm_lb_rule" "lbnatruleHTTP" {
-  loadbalancer_id                = azurerm_lb.loadbalanacer.id
-  name                           = "http"
-  protocol                       = "Tcp"
-  frontend_port                  = 80
-  backend_port                   = 80
-  backend_address_pool_ids       = [azurerm_lb_backend_address_pool.backendpool.id]
-  frontend_ip_configuration_name = azurerm_lb.loadbalanacer.frontend_ip_configuration[0].name
-  probe_id                       = azurerm_lb_probe.example.id
-}
-
-/*
-resource "azurerm_lb_rule" "lbruleSSH" {
-  loadbalancer_id                = azurerm_lb.loadbalanacer.id
-  name                           = "ssh"
-  protocol                       = "Tcp"
-  frontend_port                  = 22
-  backend_port                   = 22
-  backend_address_pool_ids       = [azurerm_lb_backend_address_pool.backendpool.id]
-  frontend_ip_configuration_name = azurerm_lb.loadbalanacer.frontend_ip_configuration[0].name
-  probe_id                       = azurerm_lb_probe.example.id
-}
-*/
-
-
-resource "azurerm_lb_probe" "example" {
-  loadbalancer_id = azurerm_lb.loadbalanacer.id
-  name            = "http-probe"
-  protocol        = "Http"
-  request_path    = "/health"
-  port            = 80
-}
 
 
 resource "azurerm_network_interface" "sgrimesProjectNIC" {
@@ -217,13 +144,13 @@ resource "azurerm_network_interface" "sgrimesProjectNIC" {
     name                          = "testconfiguration1"
     subnet_id                     = azurerm_subnet.webSubnet.id
     private_ip_address_allocation = "Dynamic"
-    # public_ip_address_id = azurerm_public_ip.pip.id
+    # public_ip_address_id          = azurerm_public_ip.pip.id
   }
 }
 
 
 
-
+/*
 resource "azurerm_virtual_machine" "main" {
   name                  = "${var.prefix}-vm"
   location              = var.resource_group_location
@@ -251,8 +178,8 @@ resource "azurerm_virtual_machine" "main" {
   }
   os_profile {
     computer_name  = "hostname"
-    admin_username = ""
-    admin_password = ""
+    admin_username = "testadmin"
+    admin_password = "Password1738!"
   }
   os_profile_linux_config {
     disable_password_authentication = false
@@ -261,21 +188,22 @@ resource "azurerm_virtual_machine" "main" {
     environment = "staging"
   }
 }
+*/
 
 
 
 /*
-
 resource "azurerm_virtual_machine_scale_set" "example" {
   name                = "${var.prefix}-vmss"
   location            = var.resource_group_location
   resource_group_name = var.resource_group_name
+  
 
   # automatic rolling upgrade
   automatic_os_upgrade = false
   upgrade_policy_mode  = "Automatic"
 
-/*
+
   rolling_upgrade_policy {
     max_batch_instance_percent              = 20
     max_unhealthy_instance_percent          = 20
@@ -314,6 +242,7 @@ resource "azurerm_virtual_machine_scale_set" "example" {
     disk_size_gb  = 10
   }
 
+
   os_profile {
     computer_name_prefix = "testvm"
     admin_username       = ""
@@ -321,7 +250,7 @@ resource "azurerm_virtual_machine_scale_set" "example" {
 
   os_profile_linux_config {
     disable_password_authentication = false
-    /*
+    
     ssh_keys {
       path     = "/home/myadmin/.ssh/authorized_keys"
       key_data = file("~/.ssh/demo_key.pub")
@@ -337,8 +266,8 @@ resource "azurerm_virtual_machine_scale_set" "example" {
       name                                   = "TestIPConfiguration"
       primary                                = true
       subnet_id                              = azurerm_subnet.webSubnet.id
-      # load_balancer_backend_address_pool_ids = [azurerm_lb_backend_address_pool.backendpool.id]
-      # load_balancer_inbound_nat_rules_ids    = [azurerm_lb_rule.lbnatrule.id]
+      load_balancer_backend_address_pool_ids = [azurerm_lb_backend_address_pool.backendpool.id]
+      load_balancer_inbound_nat_rules_ids    = [azurerm_lb_rule.lbnatrule.id]
     }
   }
 
@@ -346,14 +275,10 @@ resource "azurerm_virtual_machine_scale_set" "example" {
     environment = "staging"
   }
 }
-
 */
 
-resource "azurerm_network_interface_backend_address_pool_association" "example" {
-  network_interface_id    = azurerm_network_interface.sgrimesProjectNIC.id
-  ip_configuration_name   = "testconfiguration1"
-  backend_address_pool_id = azurerm_lb_backend_address_pool.backendpool.id
-}
+
+
 
 
 
