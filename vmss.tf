@@ -48,6 +48,8 @@ resource "azurerm_virtual_machine_scale_set" "example" {
     computer_name_prefix = "testvm"
     admin_username       = ""
     admin_password       = ""
+    # custom_data = base64encode(file("C:\\Users\\Spencer\\Desktop\\ApprentiProject2\\user.sh"))
+    custom_data = file("${path.module}/user.sh")
   }
 
   os_profile_linux_config {
@@ -68,10 +70,15 @@ resource "azurerm_virtual_machine_scale_set" "example" {
       name                                   = "TestIPConfiguration"
       primary                                = true
       subnet_id                              = azurerm_subnet.webSubnet.id
-      load_balancer_backend_address_pool_ids = [azurerm_lb_backend_address_pool.backendpool.id]
+      
+      
+      
+      
+      # load_balancer_backend_address_pool_ids = [azurerm_lb_backend_address_pool.backendpool.id]
       # load_balancer_inbound_nat_rules_ids    = [azurerm_lb_nat_rule.example.id]
     }
   }
+  
 
   tags = {
     environment = "staging"
