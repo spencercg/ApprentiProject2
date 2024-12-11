@@ -52,7 +52,6 @@ resource "azurerm_virtual_machine_scale_set" "example" {
     computer_name_prefix = "testvm"
     admin_username       = ""
     admin_password       = ""
-    # custom_data = base64encode(file("C:\\Users\\Spencer\\Desktop\\ApprentiProject2\\user.sh"))
     custom_data = file("${path.module}/user.sh")
   }
 
