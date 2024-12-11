@@ -8,7 +8,7 @@ resource "azurerm_virtual_machine_scale_set" "example" {
   # automatic rolling upgrade
   automatic_os_upgrade = false
   upgrade_policy_mode  = "Manual"
-/*
+  /*
   rolling_upgrade_policy {
     max_batch_instance_percent              = 20
     max_unhealthy_instance_percent          = 20
@@ -52,7 +52,9 @@ resource "azurerm_virtual_machine_scale_set" "example" {
     computer_name_prefix = "testvm"
     admin_username       = ""
     admin_password       = ""
-    custom_data = file("${path.module}/user.sh")
+    # custom_data          = file("${path.module}/user.sh")
+    custom_data          = filebase64("user.sh")
+    
   }
 
   os_profile_linux_config {
@@ -63,9 +65,9 @@ resource "azurerm_virtual_machine_scale_set" "example" {
       key_data = file("~/.ssh/demo_key.pub")
     }
     */
-    
 
-    
+
+
   }
 
   network_profile {
@@ -80,10 +82,66 @@ resource "azurerm_virtual_machine_scale_set" "example" {
       # load_balancer_inbound_nat_rules_ids    = [azurerm_lb_nat_rule.example.id]
     }
   }
-  
+
 
   tags = {
     environment = "staging"
   }
 }
 
+resource "azurerm_monitor_autoscale_setting" "example" {
+  name                = "vmssautoscalesetting"
+  resource_group_name = var.resource_group_name
+  location            = var.resource_group_location
+  profile {
+    name = "vmssautoscaleprofile"
+    capacity {
+      default = 2
+      maximum = 4
+      minimum = 2
+    }
+    rule {
+      metric_trigger {
+        metric_name        = "Percentage CPU"
+        metric_resource_id = azurerm_virtual_machine_scale_set.example.id
+        time_grain         = "PT1M"
+        statistic          = "Average"
+        time_window        = "PT5M"
+        time_aggregation   = "Average"
+        operator           = "GreaterThan"
+        threshold          = 80
+      }
+      scale_action {
+        cooldown  = "PT5M"
+        direction = "Increase"
+        type      = "ChangeCount"
+        value     = 1
+      }
+    }
+    rule {
+      metric_trigger {
+        metric_name        = "Percentage CPU"
+        metric_resource_id = azurerm_virtual_machine_scale_set.example.id
+        time_grain         = "PT1M"
+        statistic          = "Average"
+        time_window        = "PT5M"
+        time_aggregation   = "Average"
+        operator           = "LessThan"
+        threshold          = 50
+      }
+      scale_action {
+        cooldown  = "PT5M"
+        direction = "Decrease"
+        type      = "ChangeCount"
+        value     = 1
+      }
+    }
+
+  }
+  target_resource_id = azurerm_virtual_machine_scale_set.example.id
+  enabled            = true
+  tags = {
+    environment = "testing"
+  }
+
+}
