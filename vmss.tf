@@ -47,14 +47,20 @@ resource "azurerm_virtual_machine_scale_set" "example" {
     create_option = "Empty"
     disk_size_gb  = 10
   }
+  /*
+  boot_diagnostics {
+    storage_uri = ""
+    enabled = true
+  }
+  */
 
   os_profile {
     computer_name_prefix = "testvm"
     admin_username       = ""
     admin_password       = ""
     # custom_data          = file("${path.module}/user.sh")
-    custom_data          = filebase64("user.sh")
-    
+    custom_data = filebase64("user.sh")
+
   }
 
   os_profile_linux_config {

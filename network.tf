@@ -28,12 +28,15 @@ resource "azurerm_subnet" "webSubnet" {
   address_prefixes     = ["10.0.1.0/24"]
 }
 
+
+
 resource "azurerm_subnet" "dbSubnet" {
   name                 = "dbSubnet"
   resource_group_name  = var.resource_group_name
   virtual_network_name = azurerm_virtual_network.sgrimesProjectVNet.name
   address_prefixes     = ["10.0.2.0/24"]
 }
+
 
 resource "azurerm_subnet" "storageSubnetSubnet" {
   name                 = "storageSubnet"
@@ -42,11 +45,6 @@ resource "azurerm_subnet" "storageSubnetSubnet" {
   address_prefixes     = ["10.0.3.0/24"]
 }
 
-
-resource "azurerm_resource_group" "example" {
-  name     = "example-resources"
-  location = "West Europe"
-}
 
 resource "azurerm_network_security_group" "example" {
   name                = "webSubnetNSG"

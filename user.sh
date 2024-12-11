@@ -1,6 +1,6 @@
 #!/bin/bash
 
-touch testnumber2.txt 
+touch testnumber3.txt 
 
-sudo su apt-get update
-sudo su apt-get install nginx -y
+sudo apt-get update
+sudo apt-get install nginx -y
