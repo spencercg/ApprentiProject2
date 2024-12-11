@@ -58,7 +58,7 @@ resource "azurerm_network_security_group" "example" {
     direction                  = "Inbound"
     access                     = "Allow"
     protocol                   = "Tcp"
-    source_port_range          = "443"
+    source_port_range          = "*"
     destination_port_range     = "443"
     source_address_prefix      = "*"
     destination_address_prefix = "*"
@@ -81,7 +81,7 @@ resource "azurerm_network_security_group" "example" {
     direction                  = "Inbound"
     access                     = "Allow"
     protocol                   = "Tcp"
-    source_port_range          = "80"
+    source_port_range          = "*"
     destination_port_range     = "80"
     source_address_prefix      = "*"
     destination_address_prefix = "*"
@@ -144,7 +144,7 @@ resource "azurerm_network_interface" "sgrimesProjectNIC" {
     name                          = "testconfiguration1"
     subnet_id                     = azurerm_subnet.webSubnet.id
     private_ip_address_allocation = "Dynamic"
-    public_ip_address_id          = azurerm_public_ip.pip.id
+    # public_ip_address_id          = azurerm_public_ip.pip.id
   }
 }
 
@@ -178,8 +178,8 @@ resource "azurerm_virtual_machine" "main" {
   }
   os_profile {
     computer_name  = "hostname"
-    admin_username = "testadmin"
-    admin_password = "Password1738!"
+    admin_username = ""
+    admin_password = ""
   }
   os_profile_linux_config {
     disable_password_authentication = false
@@ -188,8 +188,8 @@ resource "azurerm_virtual_machine" "main" {
     environment = "staging"
   }
 }
-*/
 
+*/
 
 
 /*

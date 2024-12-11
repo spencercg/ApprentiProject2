@@ -1,3 +1,5 @@
+
+
 resource "azurerm_virtual_machine_scale_set" "example" {
   name                = "mytestscaleset-1"
   location            = var.resource_group_location
@@ -14,6 +16,8 @@ resource "azurerm_virtual_machine_scale_set" "example" {
     pause_time_between_batches              = "PT0S"
   }
 */
+
+
   # required when using rolling upgrade policy
   # health_probe_id = azurerm_lb_probe.example.id
 
@@ -60,6 +64,9 @@ resource "azurerm_virtual_machine_scale_set" "example" {
       key_data = file("~/.ssh/demo_key.pub")
     }
     */
+    
+
+    
   }
 
   network_profile {
@@ -70,11 +77,7 @@ resource "azurerm_virtual_machine_scale_set" "example" {
       name                                   = "TestIPConfiguration"
       primary                                = true
       subnet_id                              = azurerm_subnet.webSubnet.id
-      
-      
-      
-      
-      # load_balancer_backend_address_pool_ids = [azurerm_lb_backend_address_pool.backendpool.id]
+      load_balancer_backend_address_pool_ids = [azurerm_lb_backend_address_pool.backendpool.id]
       # load_balancer_inbound_nat_rules_ids    = [azurerm_lb_nat_rule.example.id]
     }
   }
@@ -84,3 +87,4 @@ resource "azurerm_virtual_machine_scale_set" "example" {
     environment = "staging"
   }
 }
+
