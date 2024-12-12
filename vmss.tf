@@ -15,11 +15,12 @@ resource "azurerm_virtual_machine_scale_set" "example" {
     max_unhealthy_upgraded_instance_percent = 5
     pause_time_between_batches              = "PT0S"
   }
-*/
+  */
 
 
   # required when using rolling upgrade policy
   # health_probe_id = azurerm_lb_probe.example.id
+
 
   sku {
     name     = "Standard_d2_v3"
@@ -54,6 +55,8 @@ resource "azurerm_virtual_machine_scale_set" "example" {
   }
   */
 
+
+
   os_profile {
     computer_name_prefix = "testvm"
     admin_username       = ""
@@ -75,6 +78,11 @@ resource "azurerm_virtual_machine_scale_set" "example" {
 
 
   }
+
+
+
+
+
 
   network_profile {
     name    = "terraformnetworkprofile"

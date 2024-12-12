@@ -1,3 +1,5 @@
+
+
 resource "azurerm_lb" "loadbalanacer" {
   name                = "${var.prefix}-lb"
   location            = var.resource_group_location

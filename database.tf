@@ -1,3 +1,4 @@
+
 resource "azurerm_mssql_server" "example" {
   name                         = "sgrimesmssqlserver"
   resource_group_name          = var.resource_group_name
@@ -28,6 +29,8 @@ resource "azurerm_private_endpoint" "example" {
     subresource_names = ["sqlServer"]
   }
 }
+
+
 
 resource "azurerm_mssql_firewall_rule" "example" {
   name             = "AllowFromVNet"
