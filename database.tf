@@ -4,8 +4,8 @@ resource "azurerm_mssql_server" "example" {
   resource_group_name          = var.resource_group_name
   location                     = var.resource_group_location
   version                      = "12.0"
-  administrator_login          = "test"
-  administrator_login_password = ""
+  administrator_login          = "${var.db_username}"
+  administrator_login_password = "${var.db_auth}"
 
 }
 

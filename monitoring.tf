@@ -6,7 +6,7 @@ resource "azurerm_monitor_action_group" "example" {
   sms_receiver {
     name         = "oncall-msg"
     country_code = "1"
-    phone_number = ""
+    phone_number = "${var.phone}"
   }
 }
 

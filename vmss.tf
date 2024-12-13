@@ -59,8 +59,8 @@ resource "azurerm_virtual_machine_scale_set" "example" {
 
   os_profile {
     computer_name_prefix = "testvm"
-    admin_username       = ""
-    admin_password       = ""
+    admin_username       = "${var.vm_username}"
+    admin_password       = "${var.vm_auth}"
     # custom_data          = file("${path.module}/user.sh")
     custom_data = filebase64("user.sh")
 

@@ -28,7 +28,7 @@ resource "azurerm_automation_software_update_configuration" "example" {
 
     target {
         azure_query {
-            scope = ["subscriptions/7fdf605c-e6b5-4f51-b9c0-27d0799ce221"]
+            scope = ["subscriptions/${var.sub_id}"]
             tag_filter = "All"
         }
         
