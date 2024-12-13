@@ -3,14 +3,16 @@ resource "azurerm_automation_account" "example" {
   location            = var.resource_group_location
   resource_group_name = var.resource_group_name
   sku_name            = "Basic"
+
+  tags = {
+    user = "${var.user_tag}"
+  }
 }
 
 
 resource "azurerm_automation_software_update_configuration" "example" {
   name                  = "vmupgradeautomation"
   automation_account_id = azurerm_automation_account.example.id
-  # virtual_machine_ids = [azurerm_virtual_machine_scale_set.example.id]
-  # operating_system = "Linux"
 
   linux {
     classifications_included = ["Security"]

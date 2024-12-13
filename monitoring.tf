@@ -8,6 +8,10 @@ resource "azurerm_monitor_action_group" "example" {
     country_code = "1"
     phone_number = "${var.phone}"
   }
+
+  tags = {
+    user = "${var.user_tag}"
+  }
 }
 
 

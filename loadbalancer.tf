@@ -11,6 +11,10 @@ resource "azurerm_lb" "loadbalanacer" {
     name                 = "${var.prefix}-pip"
     public_ip_address_id = azurerm_public_ip.pip.id
   }
+
+  tags = {
+    user = "${var.user_tag}"
+  }
 }
 
 resource "azurerm_lb_backend_address_pool" "backendpool" {
@@ -58,7 +62,6 @@ resource "azurerm_lb_probe" "sshprobe" {
   loadbalancer_id = azurerm_lb.loadbalanacer.id
   name            = "ssh-probe"
   protocol        = "Tcp"
-  # request_path    = ""
   port            = 22
 }
 

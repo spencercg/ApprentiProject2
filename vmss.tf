@@ -79,7 +79,7 @@ resource "azurerm_virtual_machine_scale_set" "example" {
 
 
   tags = {
-    environment = "staging"
+    user = "${var.user_tag}"
   }
 }
 
@@ -134,8 +134,10 @@ resource "azurerm_monitor_autoscale_setting" "example" {
   }
   target_resource_id = azurerm_virtual_machine_scale_set.example.id
   enabled            = true
+
+
   tags = {
-    environment = "testing"
+    user = "${var.user_tag}"
   }
 
 }

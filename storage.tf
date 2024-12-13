@@ -7,7 +7,7 @@ resource "azurerm_storage_account" "example" {
   public_network_access_enabled = false
 
   tags = {
-    environment = "staging"
+    user = "${var.user_tag}"
   }
 }
 
@@ -22,5 +22,9 @@ resource "azurerm_private_endpoint" "storage_ep" {
     is_manual_connection           = false
     private_connection_resource_id = azurerm_storage_account.example.id
     subresource_names              = ["blob"]
+  }
+
+  tags = {
+    user = "${var.user_tag}"
   }
 }

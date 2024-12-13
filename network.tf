@@ -3,6 +3,10 @@ resource "azurerm_virtual_network" "sgrimesProjectVNet" {
   location            = var.resource_group_location
   resource_group_name = var.resource_group_name
   address_space       = ["10.0.0.0/16"]
+  
+  tags = {
+    user = "${var.user_tag}"
+  }
 
 }
 
@@ -79,9 +83,10 @@ resource "azurerm_network_security_group" "example" {
 
 
   tags = {
-    environment = "testing"
+    user = "${var.user_tag}"
   }
 }
+
 
 
 
@@ -144,11 +149,10 @@ resource "azurerm_network_security_group" "dbnsg" {
     destination_address_prefix = "*"
   }
 
-
-
   tags = {
-    environment = "testing"
+    user = "${var.user_tag}"
   }
+
 }
 
 
@@ -170,7 +174,7 @@ resource "azurerm_public_ip" "pip" {
 
 
   tags = {
-    environment = "test"
+    user = "${var.user_tag}"
   }
 }
 
@@ -190,7 +194,10 @@ resource "azurerm_network_interface" "sgrimesProjectNIC" {
     name                          = "${var.prefix}-webnic"
     subnet_id                     = azurerm_subnet.webSubnet.id
     private_ip_address_allocation = "Dynamic"
-    # public_ip_address_id          = azurerm_public_ip.pip.id
+  }
+
+  tags = {
+    user = "${var.user_tag}"
   }
 }
 

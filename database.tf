@@ -6,13 +6,20 @@ resource "azurerm_mssql_server" "example" {
   version                      = "12.0"
   administrator_login          = "${var.db_username}"
   administrator_login_password = "${var.db_auth}"
-
+  
+  tags = {
+    user = "${var.user_tag}"
+  }
 }
 
 
 resource "azurerm_mssql_database" "example" {
   name      = "${var.prefix}-db"
   server_id = azurerm_mssql_server.example.id
+
+  tags = {
+    user = "${var.user_tag}"
+  }
 
 }
 
@@ -27,6 +34,10 @@ resource "azurerm_private_endpoint" "example" {
     is_manual_connection           = false
     private_connection_resource_id = azurerm_mssql_server.example.id
     subresource_names              = ["sqlServer"]
+  }
+
+  tags = {
+    user = "${var.user_tag}"
   }
 }
 
