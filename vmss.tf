@@ -17,7 +17,7 @@ resource "azurerm_virtual_machine_scale_set" "example" {
   */
 
 
-  # required when using rolling upgrade policy
+  # required when using rolling upgrade
   # health_probe_id = azurerm_lb_probe.example.id
 
 
