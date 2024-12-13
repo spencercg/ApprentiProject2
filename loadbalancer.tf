@@ -33,7 +33,7 @@ resource "azurerm_lb_rule" "lbruleHTTP" {
   backend_port                   = 80
   backend_address_pool_ids       = [azurerm_lb_backend_address_pool.backendpool.id]
   frontend_ip_configuration_name = azurerm_lb.loadbalanacer.frontend_ip_configuration[0].name
-  probe_id                       = azurerm_lb_probe.example.id
+  # probe_id                       = azurerm_lb_probe.example.id
 }
 
 
@@ -45,7 +45,7 @@ resource "azurerm_lb_rule" "lbruleSSH" {
   backend_port                   = 22
   backend_address_pool_ids       = [azurerm_lb_backend_address_pool.backendpool.id]
   frontend_ip_configuration_name = azurerm_lb.loadbalanacer.frontend_ip_configuration[0].name
-  probe_id                       = azurerm_lb_probe.sshprobe.id
+  # probe_id                       = azurerm_lb_probe.example.id
 }
 
 
@@ -58,12 +58,14 @@ resource "azurerm_lb_probe" "example" {
   port            = 8080
 }
 
+/*
 resource "azurerm_lb_probe" "sshprobe" {
   loadbalancer_id = azurerm_lb.loadbalanacer.id
   name            = "ssh-probe"
   protocol        = "Tcp"
   port            = 22
 }
+*/
 
 resource "azurerm_network_interface_backend_address_pool_association" "example" {
   network_interface_id    = azurerm_network_interface.sgrimesProjectNIC.id

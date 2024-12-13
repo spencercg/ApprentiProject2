@@ -5,21 +5,20 @@ resource "azurerm_virtual_machine_scale_set" "example" {
   location            = var.resource_group_location
   resource_group_name = var.resource_group_name
 
-  # automatic rolling upgrade
-  automatic_os_upgrade = true
-  upgrade_policy_mode  = "Rolling"
-  
+  automatic_os_upgrade = false
+  upgrade_policy_mode  = "Manual"
+  /*
   rolling_upgrade_policy {
     max_batch_instance_percent              = 20
     max_unhealthy_instance_percent          = 20
     max_unhealthy_upgraded_instance_percent = 5
     pause_time_between_batches              = "PT0S"
   }
-  
+  */
 
 
   # required when using rolling upgrade policy
-  health_probe_id = azurerm_lb_probe.example.id
+  # health_probe_id = azurerm_lb_probe.example.id
 
 
   sku {
