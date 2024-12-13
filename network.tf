@@ -1,17 +1,3 @@
-terraform {
-  required_providers {
-    azurerm = {
-      source  = "hashicorp/azurerm"
-      version = "=3.0.0"
-    }
-  }
-}
-
-provider "azurerm" {
-  features {}
-}
-
-
 resource "azurerm_virtual_network" "sgrimesProjectVNet" {
   name                = "${var.prefix}-VNet"
   location            = var.resource_group_location
@@ -113,7 +99,7 @@ resource "azurerm_subnet_network_security_group_association" "example" {
 
 
 
-/*
+
 resource "azurerm_network_security_group" "dbnsg" {
   name                = "dbSubnetNSG"
   location            = var.resource_group_location
@@ -126,7 +112,7 @@ resource "azurerm_network_security_group" "dbnsg" {
     protocol                   = "Tcp"
     source_port_range          = "*"
     destination_port_range     = "443"
-    source_address_prefix      = "*"
+    source_address_prefix      = "10.0.1.0/24"
     destination_address_prefix = "*"
   }
   security_rule {
@@ -137,7 +123,7 @@ resource "azurerm_network_security_group" "dbnsg" {
     protocol                   = "Icmp"
     source_port_range          = "*"
     destination_port_range     = "*"
-    source_address_prefix      = "*"
+    source_address_prefix      = "10.0.1.0/24"
     destination_address_prefix = "*"
   }
 
@@ -149,7 +135,7 @@ resource "azurerm_network_security_group" "dbnsg" {
     protocol                   = "Tcp"
     source_port_range          = "*"
     destination_port_range     = "80"
-    source_address_prefix      = "*"
+    source_address_prefix      = "10.0.1.0/24"
     destination_address_prefix = "*"
   }
 
@@ -161,7 +147,7 @@ resource "azurerm_network_security_group" "dbnsg" {
     protocol                   = "Tcp"
     source_port_range          = "*"
     destination_port_range     = "22"
-    source_address_prefix      = "*"
+    source_address_prefix      = "10.0.1.0/24"
     destination_address_prefix = "*"
   }
 
@@ -178,7 +164,7 @@ resource "azurerm_subnet_network_security_group_association" "dbnsgassoc" {
   subnet_id                 = azurerm_subnet.dbSubnet.id
   network_security_group_id = azurerm_network_security_group.dbnsg.id
 }
-*/
+
 
 
 resource "azurerm_public_ip" "pip" {
@@ -214,140 +200,6 @@ resource "azurerm_network_interface" "sgrimesProjectNIC" {
     # public_ip_address_id          = azurerm_public_ip.pip.id
   }
 }
-
-
-
-/*
-resource "azurerm_virtual_machine" "main" {
-  name                  = "${var.prefix}-vm"
-  location              = var.resource_group_location
-  resource_group_name   = var.resource_group_name
-  network_interface_ids = [azurerm_network_interface.sgrimesProjectNIC.id]
-  vm_size               = "Standard_d2_v3"
-
-  # Uncomment this line to delete the OS disk automatically when deleting the VM
-  delete_os_disk_on_termination = true
-
-  # Uncomment this line to delete the data disks automatically when deleting the VM
-  delete_data_disks_on_termination = true
-
-  storage_image_reference {
-    publisher = "Canonical"
-    offer     = "0001-com-ubuntu-server-jammy"
-    sku       = "22_04-lts"
-    version   = "latest"
-  }
-  storage_os_disk {
-    name              = "myosdisk1"
-    caching           = "ReadWrite"
-    create_option     = "FromImage"
-    managed_disk_type = "Standard_LRS"
-  }
-  os_profile {
-    computer_name  = "hostname"
-    admin_username = ""
-    admin_password = ""
-  }
-  os_profile_linux_config {
-    disable_password_authentication = false
-  }
-  tags = {
-    environment = "staging"
-  }
-}
-
-*/
-
-
-/*
-resource "azurerm_virtual_machine_scale_set" "example" {
-  name                = "${var.prefix}-vmss"
-  location            = var.resource_group_location
-  resource_group_name = var.resource_group_name
-  
-
-  # automatic rolling upgrade
-  automatic_os_upgrade = false
-  upgrade_policy_mode  = "Automatic"
-
-
-  rolling_upgrade_policy {
-    max_batch_instance_percent              = 20
-    max_unhealthy_instance_percent          = 20
-    max_unhealthy_upgraded_instance_percent = 5
-    pause_time_between_batches              = "PT0S"
-  }
-
-
-  # required when using rolling upgrade policy
-  # health_probe_id = azurerm_lb_probe.example.id
-
-  sku {
-    name     = "Standard_F2"
-    tier     = "Standard"
-    capacity = 2
-  }
-
-  storage_profile_image_reference {
-    publisher = "Canonical"
-    offer     = "0001-com-ubuntu-server-jammy"
-    sku       = "22_04-lts"
-    version   = "latest"
-  }
-
-  storage_profile_os_disk {
-    name              = ""
-    caching           = "ReadWrite"
-    create_option     = "FromImage"
-    managed_disk_type = "Standard_LRS"
-  }
-
-  storage_profile_data_disk {
-    lun           = 0
-    caching       = "ReadWrite"
-    create_option = "Empty"
-    disk_size_gb  = 10
-  }
-
-
-  os_profile {
-    computer_name_prefix = "testvm"
-    admin_username       = ""
-    admin_password       = "
-
-  os_profile_linux_config {
-    disable_password_authentication = false
-    
-    ssh_keys {
-      path     = "/home/myadmin/.ssh/authorized_keys"
-      key_data = file("~/.ssh/demo_key.pub")
-    }
-    
-  }
-
-  network_profile {
-    name    = "terraformnetworkprofile"
-    primary = true
-
-    ip_configuration {
-      name                                   = "TestIPConfiguration"
-      primary                                = true
-      subnet_id                              = azurerm_subnet.webSubnet.id
-      load_balancer_backend_address_pool_ids = [azurerm_lb_backend_address_pool.backendpool.id]
-      load_balancer_inbound_nat_rules_ids    = [azurerm_lb_rule.lbnatrule.id]
-    }
-  }
-
-  tags = {
-    environment = "staging"
-  }
-}
-*/
-
-
-
-
-
 
 
 

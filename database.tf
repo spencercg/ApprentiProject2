@@ -26,7 +26,7 @@ resource "azurerm_private_endpoint" "example" {
     name                           = "example-service-connection"
     is_manual_connection           = false
     private_connection_resource_id = azurerm_mssql_server.example.id
-    subresource_names = ["sqlServer"]
+    subresource_names              = ["sqlServer"]
   }
 }
 
