@@ -8,9 +8,8 @@ resource "azurerm_lb" "loadbalanacer" {
 
 
   frontend_ip_configuration {
-    name                 = "PublicIPAddress"
+    name                 = "${var.prefix}-pip"
     public_ip_address_id = azurerm_public_ip.pip.id
-    # subnet_id            = azurerm_subnet.webSubnet.id
   }
 }
 
@@ -30,7 +29,7 @@ resource "azurerm_lb_rule" "lbruleHTTP" {
   backend_port                   = 80
   backend_address_pool_ids       = [azurerm_lb_backend_address_pool.backendpool.id]
   frontend_ip_configuration_name = azurerm_lb.loadbalanacer.frontend_ip_configuration[0].name
-  # probe_id                       = azurerm_lb_probe.example.id
+  probe_id                       = azurerm_lb_probe.example.id
 }
 
 
@@ -42,7 +41,7 @@ resource "azurerm_lb_rule" "lbruleSSH" {
   backend_port                   = 22
   backend_address_pool_ids       = [azurerm_lb_backend_address_pool.backendpool.id]
   frontend_ip_configuration_name = azurerm_lb.loadbalanacer.frontend_ip_configuration[0].name
-  # probe_id                       = azurerm_lb_probe.example.id
+  probe_id                       = azurerm_lb_probe.sshprobe.id
 }
 
 
@@ -55,36 +54,17 @@ resource "azurerm_lb_probe" "example" {
   port            = 8080
 }
 
+resource "azurerm_lb_probe" "sshprobe" {
+  loadbalancer_id = azurerm_lb.loadbalanacer.id
+  name            = "ssh-probe"
+  protocol        = "Tcp"
+  # request_path    = ""
+  port            = 22
+}
+
 resource "azurerm_network_interface_backend_address_pool_association" "example" {
   network_interface_id    = azurerm_network_interface.sgrimesProjectNIC.id
-  ip_configuration_name   = "testconfiguration1"
+  ip_configuration_name   = "${var.prefix}-webnic"
   backend_address_pool_id = azurerm_lb_backend_address_pool.backendpool.id
 }
 
-
-
-/*
-resource "azurerm_lb_nat_rule" "example" {
-  resource_group_name            = var.resource_group_name
-  loadbalancer_id                = azurerm_lb.loadbalanacer.id
-  name                           = "SSHAccess"
-  protocol                       = "Tcp"
-  backend_port                   = 22
-  frontend_port                  = 22
-  frontend_ip_configuration_name = "PublicIPAddress"
-
-}
-*/
-
-/*
-resource "azurerm_lb_nat_pool" "lbnatpool" {
-  resource_group_name            = var.resource_group_name
-  name                           = "ssh"
-  loadbalancer_id                = azurerm_lb.loadblanacer.id
-  protocol                       = "Tcp"
-  frontend_port_start            = 50000
-  frontend_port_end              = 50119
-  backend_port                   = 22
-  frontend_ip_configuration_name = "PublicIPAddress"
-}
-*/

@@ -1,25 +1,25 @@
 
 
 resource "azurerm_virtual_machine_scale_set" "example" {
-  name                = "mytestscaleset-1"
+  name                = "${var.prefix}-vmss"
   location            = var.resource_group_location
   resource_group_name = var.resource_group_name
 
   # automatic rolling upgrade
-  automatic_os_upgrade = false
-  upgrade_policy_mode  = "Manual"
-  /*
+  automatic_os_upgrade = true
+  upgrade_policy_mode  = "Rolling"
+  
   rolling_upgrade_policy {
     max_batch_instance_percent              = 20
     max_unhealthy_instance_percent          = 20
     max_unhealthy_upgraded_instance_percent = 5
     pause_time_between_batches              = "PT0S"
   }
-  */
+  
 
 
   # required when using rolling upgrade policy
-  # health_probe_id = azurerm_lb_probe.example.id
+  health_probe_id = azurerm_lb_probe.example.id
 
 
   sku {
@@ -48,12 +48,7 @@ resource "azurerm_virtual_machine_scale_set" "example" {
     create_option = "Empty"
     disk_size_gb  = 10
   }
-  /*
-  boot_diagnostics {
-    storage_uri = ""
-    enabled = true
-  }
-  */
+  
 
 
 
@@ -61,39 +56,24 @@ resource "azurerm_virtual_machine_scale_set" "example" {
     computer_name_prefix = "testvm"
     admin_username       = "${var.vm_username}"
     admin_password       = "${var.vm_auth}"
-    # custom_data          = file("${path.module}/user.sh")
     custom_data = filebase64("user.sh")
 
   }
 
   os_profile_linux_config {
     disable_password_authentication = false
-    /*
-    ssh_keys {
-      path     = "/home/myadmin/.ssh/authorized_keys"
-      key_data = file("~/.ssh/demo_key.pub")
-    }
-    */
-
-
-
+    
   }
-
-
-
-
-
 
   network_profile {
     name    = "terraformnetworkprofile"
     primary = true
 
     ip_configuration {
-      name                                   = "TestIPConfiguration"
+      name                                   = "vmssipconfig"
       primary                                = true
       subnet_id                              = azurerm_subnet.webSubnet.id
       load_balancer_backend_address_pool_ids = [azurerm_lb_backend_address_pool.backendpool.id]
-      # load_balancer_inbound_nat_rules_ids    = [azurerm_lb_nat_rule.example.id]
     }
   }
 

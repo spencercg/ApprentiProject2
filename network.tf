@@ -24,13 +24,6 @@ resource "azurerm_subnet" "dbSubnet" {
 }
 
 
-resource "azurerm_subnet" "storageSubnetSubnet" {
-  name                 = "storageSubnet"
-  resource_group_name  = var.resource_group_name
-  virtual_network_name = azurerm_virtual_network.sgrimesProjectVNet.name
-  address_prefixes     = ["10.0.3.0/24"]
-}
-
 
 resource "azurerm_network_security_group" "example" {
   name                = "webSubnetNSG"
@@ -172,7 +165,7 @@ resource "azurerm_public_ip" "pip" {
   location            = var.resource_group_location
   resource_group_name = var.resource_group_name
   allocation_method   = "Static"
-  domain_name_label   = "spencercg92702"
+  domain_name_label   = "${var.domain_name_label}"
   sku                 = "Standard"
 
 
@@ -194,7 +187,7 @@ resource "azurerm_network_interface" "sgrimesProjectNIC" {
 
 
   ip_configuration {
-    name                          = "testconfiguration1"
+    name                          = "${var.prefix}-webnic"
     subnet_id                     = azurerm_subnet.webSubnet.id
     private_ip_address_allocation = "Dynamic"
     # public_ip_address_id          = azurerm_public_ip.pip.id

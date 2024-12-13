@@ -27,15 +27,7 @@ resource "azurerm_monitor_metric_alert" "vmsscpualert" {
     threshold        = 90
   }
 
-  /*
-    dimension {
-      name     = "ApiName"
-      operator = "Include"
-      values   = ["*"]
-    }
-        */
-
-
+  
   action {
     action_group_id = azurerm_monitor_action_group.example.id
   }
@@ -55,15 +47,6 @@ resource "azurerm_monitor_metric_alert" "vmssavailalert" {
     operator         = "LessThan"
     threshold        = 2
   }
-
-  /*
-    dimension {
-      name     = "ApiName"
-      operator = "Include"
-      values   = ["*"]
-    }
-        */
-
 
   action {
     action_group_id = azurerm_monitor_action_group.example.id

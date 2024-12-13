@@ -6,6 +6,6 @@ variable "resource_group_location" {
 
 variable "prefix" {
   type    = string
-  default = "sgrimesProject"
+  default = "sgrimesproject"
 
 }
